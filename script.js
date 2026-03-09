@@ -121,43 +121,20 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Función para reproducir con fallback rápido
-    function playWithFallback(url, fallbackUrl) {
+    // Función para reproducir directo
+    function playStream(url, isFallback) {
         radioAudio.src = url;
-        var playPromise = radioAudio.play();
-
-        // Timeout de 4 segundos: si no empieza a sonar, cambiar al fallback
-        var fallbackTimer = setTimeout(function () {
-            if (!radioAudio.paused && radioAudio.readyState < 3) {
-                // No ha empezado a reproducir realmente, cambiar a fallback
-                usingFallback = true;
-                if (statusEl) statusEl.textContent = '⏳ Conectando a radio alternativa...';
-                radioAudio.src = fallbackUrl;
-                radioAudio.play().catch(function (err) {
-                    if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Intenta más tarde.';
-                    isPlaying = false;
-                    updateRadioUI(false);
-                });
+        usingFallback = isFallback;
+        radioAudio.play().catch(function (err) {
+            if (!isFallback) {
+                // Si falla el principal, ir al fallback
+                playStream(radioFallbackURL, true);
+            } else {
+                if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Intenta más tarde.';
+                isPlaying = false;
+                updateRadioUI(false);
             }
-        }, 4000);
-
-        if (playPromise) {
-            playPromise.then(function () {
-                // Si logró reproducir el principal, cancelar el timer
-                if (!usingFallback) clearTimeout(fallbackTimer);
-            }).catch(function () {
-                clearTimeout(fallbackTimer);
-                // Error inmediato, ir directo al fallback
-                usingFallback = true;
-                if (statusEl) statusEl.textContent = '⏳ Conectando a radio alternativa...';
-                radioAudio.src = fallbackUrl;
-                radioAudio.play().catch(function (err) {
-                    if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Intenta más tarde.';
-                    isPlaying = false;
-                    updateRadioUI(false);
-                });
-            });
-        }
+        });
     }
 
     function toggleRadio() {
@@ -165,30 +142,31 @@ document.addEventListener('DOMContentLoaded', function () {
             radioAudio.pause();
             isPlaying = false;
         } else {
-            if (statusEl) statusEl.textContent = '⏳ Conectando a Radio Masada...';
-            usingFallback = false;
+            if (statusEl) statusEl.textContent = '⏳ Conectando...';
             isPlaying = true;
-            // Primero probar si Radio Masada responde con un fetch rápido (3s timeout)
-            var controller = new AbortController();
-            var timeoutId = setTimeout(function () { controller.abort(); }, 3000);
-            fetch(radioStreamURL, { method: 'HEAD', mode: 'no-cors', signal: controller.signal })
-                .then(function () {
-                    clearTimeout(timeoutId);
-                    // Radio Masada responde, usarla
-                    playWithFallback(radioStreamURL, radioFallbackURL);
-                })
-                .catch(function () {
-                    clearTimeout(timeoutId);
-                    // Radio Masada no responde, ir directo al fallback
+            usingFallback = false;
+
+            // Intentar Radio Masada con timeout de 3 segundos
+            radioAudio.src = radioStreamURL;
+            var fell = false;
+            var timer = setTimeout(function () {
+                // Si después de 3s no está reproduciendo, cambiar a fallback
+                if (radioAudio.readyState < 3) {
+                    fell = true;
                     usingFallback = true;
-                    if (statusEl) statusEl.textContent = '⏳ Radio Masada no disponible, conectando alternativa...';
-                    radioAudio.src = radioFallbackURL;
-                    radioAudio.play().catch(function (err) {
-                        if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Intenta más tarde.';
-                        isPlaying = false;
-                        updateRadioUI(false);
-                    });
-                });
+                    if (statusEl) statusEl.textContent = '⏳ Conectando radio alternativa...';
+                    playStream(radioFallbackURL, true);
+                }
+            }, 3000);
+
+            radioAudio.play().then(function () {
+                if (!fell) clearTimeout(timer);
+            }).catch(function () {
+                clearTimeout(timer);
+                usingFallback = true;
+                if (statusEl) statusEl.textContent = '⏳ Conectando radio alternativa...';
+                playStream(radioFallbackURL, true);
+            });
         }
         updateRadioUI(isPlaying);
     }
