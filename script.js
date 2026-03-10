@@ -68,10 +68,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // Stream real de Radio Masada (OREMRD)
     var radioAudio = new Audio();
     radioAudio.preload = 'none';
-        // URL principal: Stream del usuario (Listen2MyShow)
-        var radioStreamURL = 'https://radiomazada.listen2myshow.com/';
-    // Fallback: Radio cristiana en español vía Zeno.fm
-    var radioFallbackURL = 'https://stream.zeno.fm/0r0xa792kwzuv';
+    // Solo Listen2MyRadio como stream principal
+    var radioStreamURL = 'https://radiomazada.listen2myshow.com/';
+    var radioFallbackURL = '';
     radioAudio.volume = 0.8;
     var usingFallback = false;
 
@@ -126,14 +125,9 @@ document.addEventListener('DOMContentLoaded', function () {
         radioAudio.src = url;
         usingFallback = isFallback;
         radioAudio.play().catch(function (err) {
-            if (!isFallback) {
-                // Si falla el principal, ir al fallback
-                playStream(radioFallbackURL, true);
-            } else {
-                if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Intenta más tarde.';
-                isPlaying = false;
-                updateRadioUI(false);
-            }
+            if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Intenta más tarde.';
+            isPlaying = false;
+            updateRadioUI(false);
         });
     }
 
@@ -146,26 +140,12 @@ document.addEventListener('DOMContentLoaded', function () {
             isPlaying = true;
             usingFallback = false;
 
-            // Intentar Radio Masada con timeout de 3 segundos
+            // Solo Listen2MyRadio
             radioAudio.src = radioStreamURL;
-            var fell = false;
-            var timer = setTimeout(function () {
-                // Si después de 3s no está reproduciendo, cambiar a fallback
-                if (radioAudio.readyState < 3) {
-                    fell = true;
-                    usingFallback = true;
-                    if (statusEl) statusEl.textContent = '⏳ Conectando radio alternativa...';
-                    playStream(radioFallbackURL, true);
-                }
-            }, 3000);
-
-            radioAudio.play().then(function () {
-                if (!fell) clearTimeout(timer);
-            }).catch(function () {
-                clearTimeout(timer);
-                usingFallback = true;
-                if (statusEl) statusEl.textContent = '⏳ Conectando radio alternativa...';
-                playStream(radioFallbackURL, true);
+            radioAudio.play().catch(function () {
+                if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Intenta más tarde.';
+                isPlaying = false;
+                updateRadioUI(false);
             });
         }
         updateRadioUI(isPlaying);
@@ -187,17 +167,8 @@ document.addEventListener('DOMContentLoaded', function () {
         updateRadioUI(false);
     });
     radioAudio.addEventListener('error', function () {
-        // Si falla el stream actual, intentar fallback
-        if (radioAudio.src && radioAudio.src.indexOf('vcradios') !== -1) {
-            usingFallback = true;
-            if (statusEl) statusEl.textContent = '⏳ Cambiando a radio alternativa...';
-            radioAudio.src = radioFallbackURL;
-            radioAudio.play().catch(function () {
-                if (statusEl) statusEl.textContent = '⚠️ No hay streams disponibles';
-                isPlaying = false;
-                updateRadioUI(false);
-            });
-        } else if (isPlaying) {
+        // Si falla el stream actual, mostrar error
+        if (isPlaying) {
             if (statusEl) statusEl.textContent = '⚠️ Error de conexión al stream';
             isPlaying = false;
             updateRadioUI(false);
