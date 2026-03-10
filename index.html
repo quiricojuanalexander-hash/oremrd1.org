@@ -21,32 +21,37 @@
                 <input type="range" id="main-volume" min="0" max="1" step="0.01" value="0.8" style="width:60px;margin-left:8px;vertical-align:middle;">
         </div>
         <script>
-            const mainAudio = document.getElementById('main-radio-audio');
-            const mainPlayBtn = document.getElementById('main-play-btn');
-            const mainPauseBtn = document.getElementById('main-pause-btn');
-            const mainVolumeSlider = document.getElementById('main-volume');
-            mainPlayBtn.onclick = function() {
-                mainAudio.play();
-                mainPlayBtn.style.display = 'none';
-                mainPauseBtn.style.display = 'inline-block';
-            };
-            mainPauseBtn.onclick = function() {
-                mainAudio.pause();
-                mainPlayBtn.style.display = 'inline-block';
-                mainPauseBtn.style.display = 'none';
-            };
-            mainAudio.onpause = function() {
-                mainPlayBtn.style.display = 'inline-block';
-                mainPauseBtn.style.display = 'none';
-            };
-            mainAudio.onplay = function() {
-                mainPlayBtn.style.display = 'none';
-                mainPauseBtn.style.display = 'inline-block';
-            };
-            mainVolumeSlider.oninput = function() {
-                mainAudio.volume = this.value;
-            };
-            mainAudio.volume = mainVolumeSlider.value;
+                const mainAudio = document.getElementById('main-radio-audio');
+                const mainPlayBtn = document.getElementById('main-play-btn');
+                const mainPauseBtn = document.getElementById('main-pause-btn');
+                const mainVolumeSlider = document.getElementById('main-volume');
+                mainPlayBtn.onclick = function() {
+                    mainAudio.play();
+                    mainPlayBtn.style.display = 'none';
+                    mainPauseBtn.style.display = 'inline-block';
+                };
+                mainPauseBtn.onclick = function() {
+                    mainAudio.pause();
+                    mainPlayBtn.style.display = 'inline-block';
+                    mainPauseBtn.style.display = 'none';
+                };
+                mainAudio.onpause = function() {
+                    mainPlayBtn.style.display = 'inline-block';
+                    mainPauseBtn.style.display = 'none';
+                };
+                mainAudio.onplay = function() {
+                    mainPlayBtn.style.display = 'none';
+                    mainPauseBtn.style.display = 'inline-block';
+                };
+                mainVolumeSlider.oninput = function() {
+                    mainAudio.volume = this.value;
+                };
+                mainAudio.volume = mainVolumeSlider.value;
+
+                // Intentar autoplay al cargar la página
+                window.addEventListener('DOMContentLoaded', function() {
+                    mainAudio.play().catch(function(){ /* Autoplay puede ser bloqueado */ });
+                });
         </script>
 
         <a href="#main-content" class="skip-link">Ir al contenido principal</a>
