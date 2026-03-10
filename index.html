@@ -13,19 +13,15 @@
 
         <!-- REPRODUCTOR PERSONALIZADO SUPER VISIBLE -->
         <div class="radio-player-main" style="max-width:500px;margin:2em auto 2em auto;padding:2em;background:#222;color:#fff;border-radius:20px;box-shadow:0 2px 16px #0008;text-align:center;z-index:9999;position:relative;">
-            <h2 style="margin-bottom:1em;">🔊 Radio Masada en vivo</h2>
-            <audio id="main-radio-audio" preload="none" style="width:100%;outline:none;border-radius:8px;">
-                 <source src="http://82.145.63.6:8959/;stream.mp3" type="audio/mpeg">
-                 Tu navegador no soporta audio HTML5.
-            </audio>
-            <div style="margin-top:1em;">
-                <button id="main-play-btn" style="padding:0.7em 2em;border:none;border-radius:8px;background:#4caf50;color:#fff;font-size:1.2em;cursor:pointer;">▶️ Escuchar</button>
-                <button id="main-pause-btn" style="padding:0.7em 2em;border:none;border-radius:8px;background:#f44336;color:#fff;font-size:1.2em;cursor:pointer;display:none;">⏸️ Pausar</button>
-            </div>
-            <div style="margin-top:1em;">
-                <label for="main-volume">Volumen:</label>
-                <input type="range" id="main-volume" min="0" max="1" step="0.01" value="0.8" style="vertical-align:middle;">
-            </div>
+                <audio id="main-radio-audio" preload="none" style="width:220px;height:40px;outline:none;border-radius:8px;background:#111;">
+                    <source src="http://82.145.63.6:8959/;stream.mp3" type="audio/mpeg">
+                    Tu navegador no soporta audio HTML5.
+                </audio>
+                <div style="margin-top:0.5em;">
+                    <button id="main-play-btn" style="padding:0.5em 1.2em;border:none;border-radius:8px;background:#4caf50;color:#fff;font-size:1em;cursor:pointer;">▶️</button>
+                    <button id="main-pause-btn" style="padding:0.5em 1.2em;border:none;border-radius:8px;background:#f44336;color:#fff;font-size:1em;cursor:pointer;display:none;">⏸️</button>
+                    <input type="range" id="main-volume" min="0" max="1" step="0.01" value="0.8" style="width:80px;margin-left:10px;vertical-align:middle;">
+                </div>
         </div>
         <script>
             const mainAudio = document.getElementById('main-radio-audio');
@@ -315,7 +311,7 @@
     <script src="script.js"></script>
 </body>
 <div style="text-align:center; margin-top:30px;">
-    <iframe src="https://radiomazada.listen2myshow.com/" width="100%" height="600" frameborder="0" allowtransparency="true" style="border-radius:12px; max-width:900px;"></iframe>
+
 </div>
 </body>
 </html>
