@@ -12,7 +12,49 @@
 <body>
 
         <!-- REPRODUCTOR PERSONALIZADO SUPER VISIBLE -->
-        <!-- El reproductor principal usará solo el stream de Listen2MyRadio, sin música ambiente ni reproductores alternativos. -->
+        <div class="radio-player-main" style="max-width:500px;margin:2em auto 2em auto;padding:2em;background:#222;color:#fff;border-radius:20px;box-shadow:0 2px 16px #0008;text-align:center;z-index:9999;position:relative;">
+            <h2 style="margin-bottom:1em;">🔊 Radio Masada en vivo</h2>
+            <audio id="main-radio-audio" preload="none" style="width:100%;outline:none;border-radius:8px;">
+                <source src="https://radiomazada.listen2myshow.com/" type="audio/mpeg">
+                Tu navegador no soporta audio HTML5.
+            </audio>
+            <div style="margin-top:1em;">
+                <button id="main-play-btn" style="padding:0.7em 2em;border:none;border-radius:8px;background:#4caf50;color:#fff;font-size:1.2em;cursor:pointer;">▶️ Escuchar</button>
+                <button id="main-pause-btn" style="padding:0.7em 2em;border:none;border-radius:8px;background:#f44336;color:#fff;font-size:1.2em;cursor:pointer;display:none;">⏸️ Pausar</button>
+            </div>
+            <div style="margin-top:1em;">
+                <label for="main-volume">Volumen:</label>
+                <input type="range" id="main-volume" min="0" max="1" step="0.01" value="0.8" style="vertical-align:middle;">
+            </div>
+        </div>
+        <script>
+            const mainAudio = document.getElementById('main-radio-audio');
+            const mainPlayBtn = document.getElementById('main-play-btn');
+            const mainPauseBtn = document.getElementById('main-pause-btn');
+            const mainVolumeSlider = document.getElementById('main-volume');
+            mainPlayBtn.onclick = function() {
+                mainAudio.play();
+                mainPlayBtn.style.display = 'none';
+                mainPauseBtn.style.display = 'inline-block';
+            };
+            mainPauseBtn.onclick = function() {
+                mainAudio.pause();
+                mainPlayBtn.style.display = 'inline-block';
+                mainPauseBtn.style.display = 'none';
+            };
+            mainAudio.onpause = function() {
+                mainPlayBtn.style.display = 'inline-block';
+                mainPauseBtn.style.display = 'none';
+            };
+            mainAudio.onplay = function() {
+                mainPlayBtn.style.display = 'none';
+                mainPauseBtn.style.display = 'inline-block';
+            };
+            mainVolumeSlider.oninput = function() {
+                mainAudio.volume = this.value;
+            };
+            mainAudio.volume = mainVolumeSlider.value;
+        </script>
         <a href="#main-content" class="skip-link">Ir al contenido principal</a>
 
     <!-- Header -->
@@ -82,68 +124,7 @@
     </section>
 
     <!-- Radio Player Bar -->
-    <section class="radio-section" id="radio">
-        <div class="radio-container">
-            <div class="radio-icon"><i class="fas fa-broadcast-tower"></i></div>
-            <span class="radio-label">Escucha Radio Masada en vivo:</span>
-            <div class="radio-player">
-                <button class="play-btn" id="radioPlayBtn" aria-label="Reproducir radio">
-                    <i class="fas fa-play"></i>
-                </button>
-                <div class="audio-visualizer">
-                    <span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span><span class="bar"></span>
-                </div>
-                <div class="volume-control">
-                    <i class="fas fa-volume-up"></i>
-                    <input type="range" min="0" max="100" value="80" class="volume-slider">
-                </div>
-            </div>
-        </div>
-                <!-- Reproductor personalizado Listen2MyRadio -->
-                <div id="custom-radio-player" style="max-width:350px;margin:2em auto;padding:1em;background:#222;color:#fff;border-radius:12px;box-shadow:0 2px 12px #0002;text-align:center;">
-                    <h3 style="margin-bottom:1em;">Reproductor alternativo</h3>
-                    <audio id="radio-audio" preload="none" style="width:100%;outline:none;border-radius:6px;">
-                        <source src="https://radiomazada.listen2myshow.com/" type="audio/mpeg">
-                        Tu navegador no soporta audio HTML5.
-                    </audio>
-                    <div style="margin-top:1em;">
-                        <button id="play-btn" style="padding:0.5em 1.5em;border:none;border-radius:6px;background:#4caf50;color:#fff;font-size:1.1em;cursor:pointer;">▶️ Escuchar</button>
-                        <button id="pause-btn" style="padding:0.5em 1.5em;border:none;border-radius:6px;background:#f44336;color:#fff;font-size:1.1em;cursor:pointer;display:none;">⏸️ Pausar</button>
-                    </div>
-                    <div style="margin-top:1em;">
-                        <label for="volume">Volumen:</label>
-                        <input type="range" id="volume" min="0" max="1" step="0.01" value="0.8" style="vertical-align:middle;">
-                    </div>
-                </div>
-                <script>
-                const audio = document.getElementById('radio-audio');
-                const playBtn = document.getElementById('play-btn');
-                const pauseBtn = document.getElementById('pause-btn');
-                const volumeSlider = document.getElementById('volume');
-                playBtn.onclick = function() {
-                    audio.play();
-                    playBtn.style.display = 'none';
-                    pauseBtn.style.display = 'inline-block';
-                };
-                pauseBtn.onclick = function() {
-                    audio.pause();
-                    playBtn.style.display = 'inline-block';
-                    pauseBtn.style.display = 'none';
-                };
-                audio.onpause = function() {
-                    playBtn.style.display = 'inline-block';
-                    pauseBtn.style.display = 'none';
-                };
-                audio.onplay = function() {
-                    playBtn.style.display = 'none';
-                    pauseBtn.style.display = 'inline-block';
-                };
-                volumeSlider.oninput = function() {
-                    audio.volume = this.value;
-                };
-                audio.volume = volumeSlider.value;
-                </script>
-    </section>
+    <!-- Se eliminan reproductores alternativos. Solo queda el principal arriba -->
 
     <!-- Main Content -->
     <main id="main-content" class="main-wrapper">
