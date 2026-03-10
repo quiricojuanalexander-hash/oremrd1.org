@@ -1,0 +1,45 @@
+<!-- Reproductor personalizado para Listen2MyRadio -->
+<div id="custom-radio-player" style="max-width:350px;margin:2em auto;padding:1em;background:#222;color:#fff;border-radius:12px;box-shadow:0 2px 12px #0002;text-align:center;">
+  <h3 style="margin-bottom:1em;">Radio Masada</h3>
+  <audio id="radio-audio" preload="none" style="width:100%;outline:none;border-radius:6px;">
+    <source src="https://radiomazada.listen2myshow.com/" type="audio/mpeg">
+    Tu navegador no soporta audio HTML5.
+  </audio>
+  <div style="margin-top:1em;">
+    <button id="play-btn" style="padding:0.5em 1.5em;border:none;border-radius:6px;background:#4caf50;color:#fff;font-size:1.1em;cursor:pointer;">▶️ Escuchar</button>
+    <button id="pause-btn" style="padding:0.5em 1.5em;border:none;border-radius:6px;background:#f44336;color:#fff;font-size:1.1em;cursor:pointer;display:none;">⏸️ Pausar</button>
+  </div>
+  <div style="margin-top:1em;">
+    <label for="volume">Volumen:</label>
+    <input type="range" id="volume" min="0" max="1" step="0.01" value="0.8" style="vertical-align:middle;">
+  </div>
+</div>
+<script>
+const audio = document.getElementById('radio-audio');
+const playBtn = document.getElementById('play-btn');
+const pauseBtn = document.getElementById('pause-btn');
+const volumeSlider = document.getElementById('volume');
+
+playBtn.onclick = function() {
+  audio.play();
+  playBtn.style.display = 'none';
+  pauseBtn.style.display = 'inline-block';
+};
+pauseBtn.onclick = function() {
+  audio.pause();
+  playBtn.style.display = 'inline-block';
+  pauseBtn.style.display = 'none';
+};
+audio.onpause = function() {
+  playBtn.style.display = 'inline-block';
+  pauseBtn.style.display = 'none';
+};
+audio.onplay = function() {
+  playBtn.style.display = 'none';
+  pauseBtn.style.display = 'inline-block';
+};
+volumeSlider.oninput = function() {
+  audio.volume = this.value;
+};
+audio.volume = volumeSlider.value;
+</script>

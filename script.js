@@ -68,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
     // Stream real de Radio Masada (OREMRD)
     var radioAudio = new Audio();
     radioAudio.preload = 'none';
-    // URL principal: Stream del usuario (Domint.net)
-    var radioStreamURL = 'http://stream4.domint.net:8174';
+        // URL principal: Stream del usuario (Listen2MyShow)
+        var radioStreamURL = 'https://radiomazada.listen2myshow.com/';
     // Fallback: Radio cristiana en español vía Zeno.fm
     var radioFallbackURL = 'https://stream.zeno.fm/0r0xa792kwzuv';
     radioAudio.volume = 0.8;
