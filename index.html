@@ -338,37 +338,6 @@
 
     <script src="script.js"></script>
 <script>
-    const mainAudio = document.getElementById('main-radio-audio');
-    const mainPlayBtn = document.getElementById('main-play-btn');
-    const mainPauseBtn = document.getElementById('main-pause-btn');
-    const mainVolumeSlider = document.getElementById('main-volume');
-    if(mainAudio && mainPlayBtn && mainPauseBtn && mainVolumeSlider) {
-        mainPlayBtn.onclick = function() {
-            mainAudio.play();
-            mainPlayBtn.style.display = 'none';
-            mainPauseBtn.style.display = 'inline-block';
-        };
-        mainPauseBtn.onclick = function() {
-            mainAudio.pause();
-            mainPlayBtn.style.display = 'inline-block';
-            mainPauseBtn.style.display = 'none';
-        };
-        mainAudio.onpause = function() {
-            mainPlayBtn.style.display = 'inline-block';
-            mainPauseBtn.style.display = 'none';
-        };
-        mainAudio.onplay = function() {
-            mainPlayBtn.style.display = 'none';
-            mainPauseBtn.style.display = 'inline-block';
-        };
-        mainVolumeSlider.oninput = function() {
-            mainAudio.volume = this.value;
-        };
-        mainAudio.volume = mainVolumeSlider.value;
-        window.addEventListener('DOMContentLoaded', function() {
-            mainAudio.play().catch(function(){ /* Autoplay puede ser bloqueado */ });
-        });
-    }
 </script>
 </body>
 </html>
