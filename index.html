@@ -30,56 +30,46 @@
         </div>
     </header>
     <!-- Imagen evangelica debajo del header -->
-    <div style="max-width:800px;margin:6em auto 0 auto;">
+    <div class="main-content-wrapper" style="max-width:900px;margin:6em auto 2em auto;padding:0 2vw;box-sizing:border-box;">
         <img src="https://res.cloudinary.com/dpoixqarn/image/upload/v1773269015/masada-banner.png_hwvb1x.png" alt="Organización Evangélica Mundial" style="width:100%;border-radius:20px;box-shadow:0 2px 16px #0008;">
+        <!-- Aquí puedes agregar más contenido, posts, widgets, etc. -->
     </div>
-    <!-- Reproductor debajo -->
-    <div style="position:relative; max-width:800px; margin:2em auto 2em auto;">
-        <div style="position:relative;z-index:2;max-width:500px;margin:2em auto;padding:2em;background:rgba(34,34,34,0.85);color:#fff;border-radius:20px;box-shadow:0 2px 16px #0008;text-align:center;">
-                    <h2 style="margin-bottom:1em;">🔊 Radio Masada en vivo</h2>
-                    <audio id="main-radio-audio" preload="none" style="width:400px;height:60px;outline:none;border-radius:12px;background:#111;display:inline-block;vertical-align:middle;font-size:1.2em;">
-                        <source src="https://fpsnew1.listen2myradio.com:2199/listen.php?ip=82.145.63.6&port=8959&type=s2&mount=1" type="audio/mpeg">
-                    </audio>
-                    <button id="main-play-btn" style="padding:0.3em 0.8em;border:none;border-radius:8px;background:#4caf50;color:#fff;font-size:0.9em;cursor:pointer;display:inline-block;vertical-align:middle;">▶️</button>
-                    <button id="main-pause-btn" style="padding:0.3em 0.8em;border:none;border-radius:8px;background:#f44336;color:#fff;font-size:0.9em;cursor:pointer;display:none;vertical-align:middle;">⏸️</button>
-                    <input type="range" id="main-volume" min="0" max="1" step="0.01" value="0.8" style="width:60px;margin-left:8px;vertical-align:middle;">
-                        </div>
-                    </div>
-                </div>
+
+    <!-- ...existing code... -->
             </div>
         </div>
         <script>
-                const mainAudio = document.getElementById('main-radio-audio');
-                const mainPlayBtn = document.getElementById('main-play-btn');
-                const mainPauseBtn = document.getElementById('main-pause-btn');
-                const mainVolumeSlider = document.getElementById('main-volume');
-                mainPlayBtn.onclick = function() {
-                    mainAudio.play();
-                    mainPlayBtn.style.display = 'none';
-                    mainPauseBtn.style.display = 'inline-block';
-                };
-                mainPauseBtn.onclick = function() {
-                    mainAudio.pause();
-                    mainPlayBtn.style.display = 'inline-block';
-                    mainPauseBtn.style.display = 'none';
-                };
-                mainAudio.onpause = function() {
-                    mainPlayBtn.style.display = 'inline-block';
-                    mainPauseBtn.style.display = 'none';
-                };
-                mainAudio.onplay = function() {
-                    mainPlayBtn.style.display = 'none';
-                    mainPauseBtn.style.display = 'inline-block';
-                };
-                mainVolumeSlider.oninput = function() {
-                    mainAudio.volume = this.value;
-                };
-                mainAudio.volume = mainVolumeSlider.value;
+        const mainAudio = document.getElementById('main-radio-audio');
+        const mainPlayBtn = document.getElementById('main-play-btn');
+        const mainPauseBtn = document.getElementById('main-pause-btn');
+        const mainVolumeSlider = document.getElementById('main-volume');
+        mainPlayBtn.onclick = function() {
+            mainAudio.play();
+            mainPlayBtn.style.display = 'none';
+            mainPauseBtn.style.display = 'inline-block';
+        };
+        mainPauseBtn.onclick = function() {
+            mainAudio.pause();
+            mainPlayBtn.style.display = 'inline-block';
+            mainPauseBtn.style.display = 'none';
+        };
+        mainAudio.onpause = function() {
+            mainPlayBtn.style.display = 'inline-block';
+            mainPauseBtn.style.display = 'none';
+        };
+        mainAudio.onplay = function() {
+            mainPlayBtn.style.display = 'none';
+            mainPauseBtn.style.display = 'inline-block';
+        };
+        mainVolumeSlider.oninput = function() {
+            mainAudio.volume = this.value;
+        };
+        mainAudio.volume = mainVolumeSlider.value;
 
-                // Intentar autoplay al cargar la página
-                window.addEventListener('DOMContentLoaded', function() {
-                    mainAudio.play().catch(function(){ /* Autoplay puede ser bloqueado */ });
-                });
+        // Intentar autoplay al cargar la página
+        window.addEventListener('DOMContentLoaded', function() {
+            mainAudio.play().catch(function(){ /* Autoplay puede ser bloqueado */ });
+        });
         </script>
 
         <a href="#main-content" class="skip-link">Ir al contenido principal</a>
@@ -286,12 +276,27 @@
                     <div class="country-item"><img src="https://upload.wikimedia.org/wikipedia/commons/2/28/Flag_of_Puerto_Rico.svg" alt="PR"><span>Puerto Rico</span></div>
                     <div class="country-item"><img src="https://upload.wikimedia.org/wikipedia/en/a/a4/Flag_of_the_United_States.svg" alt="US"><span>Estados Unidos</span></div>
                 </div>
+                <div style="margin-top:1em;text-align:center;">
+                    <a href="https://info.flagcounter.com/GC4I" target="_blank">
+                        <img src="https://s01.flagcounter.com/count2/GC4I/bg_FFFFFF/txt_000000/border_CCCCCC/columns_2/maxflags_10/viewers_0/labels_0/pageviews_0/flags_0/percent_0/" alt="Flag Counter" style="border:0;max-width:100%;height:auto;">
+                    </a>
+                </div>
             </div>
         </aside>
     </main>
 
     <!-- Footer -->
     <footer class="site-footer">
+            <!-- Barra de reproductor fija abajo -->
+            <div id="radio-bar" style="position:fixed;bottom:0;left:0;width:100%;background:#222;color:#fff;z-index:9999;box-shadow:0 -2px 16px #0008;padding:0.5em 0;display:flex;align-items:center;justify-content:center;">
+                <audio id="main-radio-audio" preload="none" style="width:220px;height:32px;outline:none;border-radius:8px;background:#111;display:inline-block;vertical-align:middle;font-size:1em;">
+                    <source src="https://fpsnew1.listen2myradio.com:2199/listen.php?ip=82.145.63.6&port=8959&type=s2&mount=1" type="audio/mpeg">
+                </audio>
+                <button id="main-play-btn" style="margin-left:10px;padding:0.2em 0.7em;border:none;border-radius:8px;background:#4caf50;color:#fff;font-size:0.9em;cursor:pointer;display:inline-block;vertical-align:middle;">▶️</button>
+                <button id="main-pause-btn" style="margin-left:5px;padding:0.2em 0.7em;border:none;border-radius:8px;background:#f44336;color:#fff;font-size:0.9em;cursor:pointer;display:none;vertical-align:middle;">⏸️</button>
+                <input type="range" id="main-volume" min="0" max="1" step="0.01" value="0.8" style="width:60px;margin-left:10px;vertical-align:middle;">
+                <span style="margin-left:12px;font-size:1em;">🔊 Radio Masada en vivo</span>
+            </div>
         <div class="footer-inner">
             <div class="footer-columns">
                 <div class="footer-col">
@@ -320,6 +325,16 @@
             </div>
         </div>
     </footer>
+    <!-- Barra de reproductor fija en el borde inferior -->
+    <div id="radio-bar" style="position:fixed;bottom:0;left:0;width:100vw;background:#222;color:#fff;z-index:9999;box-shadow:0 -2px 16px #0008;padding:0.5em 0;display:flex;align-items:center;justify-content:center;">
+        <audio id="main-radio-audio" preload="none" style="width:220px;height:32px;outline:none;border-radius:8px;background:#111;display:inline-block;vertical-align:middle;font-size:1em;">
+            <source src="https://fpsnew1.listen2myradio.com:2199/listen.php?ip=82.145.63.6&port=8959&type=s2&mount=1" type="audio/mpeg">
+        </audio>
+        <button id="main-play-btn" style="margin-left:10px;padding:0.2em 0.7em;border:none;border-radius:8px;background:#4caf50;color:#fff;font-size:0.9em;cursor:pointer;display:inline-block;vertical-align:middle;">▶️</button>
+        <button id="main-pause-btn" style="margin-left:5px;padding:0.2em 0.7em;border:none;border-radius:8px;background:#f44336;color:#fff;font-size:0.9em;cursor:pointer;display:none;vertical-align:middle;">⏸️</button>
+        <input type="range" id="main-volume" min="0" max="1" step="0.01" value="0.8" style="width:60px;margin-left:10px;vertical-align:middle;">
+        <span style="margin-left:12px;font-size:1em;">🔊 Radio Masada en vivo</span>
+    </div>
 
     <script src="script.js"></script>
 </body>
