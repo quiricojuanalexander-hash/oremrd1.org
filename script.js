@@ -69,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var radioAudio = new Audio();
     radioAudio.preload = 'none';
     // Solo Listen2MyRadio como stream principal
-    var radioStreamURL = 'https://radiomazada.listen2myshow.com/';
+    var radioStreamURL = 'https://fpsnew1.listen2myradio.com:2199/listen.php?ip=82.145.63.6&port=8959&type=s2&mount=1';
     var radioFallbackURL = '';
     radioAudio.volume = 0.8;
     var usingFallback = false;
