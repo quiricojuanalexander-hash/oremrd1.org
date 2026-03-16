@@ -88,9 +88,11 @@ document.addEventListener('DOMContentLoaded', function () {
     var usingFallback = false;
 
     // Radio player - Barra del index
-    var playBtn = document.getElementById('radioPlayBtn');
+    var playBtn = document.getElementById('radioPlayBtn') || document.getElementById('main-play-btn');
     var visualizer = document.querySelector('.audio-visualizer');
     var isPlaying = false;
+    var mainPlayBtnEl = document.getElementById('main-play-btn');
+    var mainPauseBtnEl = document.getElementById('main-pause-btn');
 
     // Radio player - Página de radio (grande)
     var playLarge = document.getElementById('radioPlayLarge');
@@ -99,19 +101,30 @@ document.addEventListener('DOMContentLoaded', function () {
     var isPlayingLarge = false;
 
     function updateRadioUI(playing) {
-        // Actualizar barra del index
+        // Actualizar barra del index: manejar ambos tipos de botones
         if (playBtn) {
-            var icon = playBtn.querySelector('i');
-            if (playing) {
-                icon.classList.remove('fa-play');
-                icon.classList.add('fa-pause');
-                playBtn.classList.add('playing');
-                if (visualizer) visualizer.classList.add('active');
-            } else {
-                icon.classList.remove('fa-pause');
-                icon.classList.add('fa-play');
-                playBtn.classList.remove('playing');
-                if (visualizer) visualizer.classList.remove('active');
+            var icon = playBtn.querySelector && playBtn.querySelector('i');
+            if (icon) {
+                if (playing) {
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-pause');
+                    playBtn.classList.add('playing');
+                    if (visualizer) visualizer.classList.add('active');
+                } else {
+                    icon.classList.remove('fa-pause');
+                    icon.classList.add('fa-play');
+                    playBtn.classList.remove('playing');
+                    if (visualizer) visualizer.classList.remove('active');
+                }
+            } else if (mainPlayBtnEl && mainPauseBtnEl) {
+                // botones simples sin <i>
+                if (playing) {
+                    mainPlayBtnEl.style.display = 'none';
+                    mainPauseBtnEl.style.display = 'inline-block';
+                } else {
+                    mainPlayBtnEl.style.display = 'inline-block';
+                    mainPauseBtnEl.style.display = 'none';
+                }
             }
         }
         // Actualizar player grande
@@ -176,6 +189,9 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (playBtn) playBtn.addEventListener('click', toggleRadio);
+    // También enlazar los botones principales si existen
+    if (mainPlayBtnEl) mainPlayBtnEl.addEventListener('click', toggleRadio);
+    if (mainPauseBtnEl) mainPauseBtnEl.addEventListener('click', toggleRadio);
     if (playLarge) playLarge.addEventListener('click', toggleRadio);
 
     // Eventos de audio
