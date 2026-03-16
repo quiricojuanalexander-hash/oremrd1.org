@@ -531,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function () {
             localStorage.setItem('oremrd_messages', JSON.stringify(messages));
 
             // También abrir mailto
-            var mailtoURL = 'mailto:oremrd@gmail.com?subject=Mensaje de ' + encodeURIComponent(name) + '&body=' + encodeURIComponent('De: ' + name + '\nEmail: ' + email + '\n\n' + message);
+            var mailtoURL = 'mailto:quiricojuanalexander@gmail.com?subject=Mensaje de ' + encodeURIComponent(name) + '&body=' + encodeURIComponent('De: ' + name + '\nEmail: ' + email + '\n\n' + message);
             window.open(mailtoURL, '_blank');
 
             contactForm.reset();
