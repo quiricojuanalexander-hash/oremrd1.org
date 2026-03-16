@@ -66,8 +66,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // ===== REAL AUDIO PLAYER - Radio Masada =====
     // Stream real de Radio Masada (OREMRD)
-    var radioAudio = new Audio();
-    radioAudio.preload = 'none';
+    // Preferir un elemento <audio id="main-radio-audio"> si ya existe en la página para evitar duplicados
+    var radioAudio = null;
+    var domAudioEl = document.getElementById('main-radio-audio');
+    if (domAudioEl && domAudioEl.tagName && domAudioEl.tagName.toLowerCase() === 'audio') {
+        radioAudio = domAudioEl;
+        radioAudio.preload = radioAudio.preload || 'none';
+    } else {
+        radioAudio = new Audio();
+        radioAudio.preload = 'none';
+    }
     // URL del stream: se puede configurar por el usuario y se guarda en localStorage
     var storedURL = localStorage.getItem('oremrd_stream_url');
     var radioStreamURL = storedURL || 'https://uk16freenew.listen2myradio.com/live.mp3?typeportmount=s1_12175_stream_273231163';
