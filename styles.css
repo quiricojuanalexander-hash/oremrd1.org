@@ -295,6 +295,72 @@ blockquote cite { font-size: 13px; color: #e94560; font-style: normal; font-weig
 .footer-bottom { text-align: center; padding: 20px 0; font-size: 13px; color: #888; }
 .footer-bottom a { color: #e94560; }
 
+/* ===== RADIO BAR FIXED ===== */
+#radio-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #222;
+    color: #fff;
+    z-index: 9999;
+    box-shadow: 0 -2px 16px #0008;
+    padding: 0.5em 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1em;
+    min-height: 38px;
+}
+#radio-bar audio {
+    width: 220px;
+    height: 32px;
+    border-radius: 8px;
+    background: #111;
+    outline: none;
+    font-size: 1em;
+}
+#radio-bar button {
+    margin-left: 10px;
+    padding: 0.2em 0.7em;
+    border: none;
+    border-radius: 8px;
+    background: #4caf50;
+    color: #fff;
+    font-size: 0.9em;
+    cursor: pointer;
+    display: inline-block;
+    vertical-align: middle;
+    transition: background 0.2s;
+}
+#radio-bar button#main-pause-btn {
+    background: #f44336;
+    margin-left: 5px;
+}
+#radio-bar input[type="range"] {
+    width: 60px;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+#radio-bar span {
+    margin-left: 12px;
+    font-size: 1em;
+    font-weight: 500;
+}
+@media (max-width: 600px) {
+    #radio-bar {
+        font-size: 0.9em;
+        padding: 0.3em 0;
+    }
+    #radio-bar audio {
+        width: 120px;
+    }
+    #radio-bar span {
+        display: none;
+    }
+}
+
 /* ===== BACK TO TOP ===== */
 .back-to-top { position: fixed; bottom: 25px; right: 25px; width: 45px; height: 45px; border-radius: 50%; background: #e94560; color: #fff; border: none; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; z-index: 999; box-shadow: 0 3px 10px rgba(0,0,0,0.2); transition: all 0.3s; opacity: 0; visibility: hidden; transform: translateY(20px); }
 .back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }

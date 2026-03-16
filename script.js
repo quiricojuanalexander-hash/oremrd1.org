@@ -68,9 +68,14 @@ document.addEventListener('DOMContentLoaded', function () {
     // Stream real de Radio Masada (OREMRD)
     var radioAudio = new Audio();
     radioAudio.preload = 'none';
-    // Solo Listen2MyRadio como stream principal
-    var radioStreamURL = 'https://fpsnew1.listen2myradio.com:2199/listen.php?ip=82.145.63.6&port=8959&type=s2&mount=1';
-    var radioFallbackURL = '';
+    // URL del stream: se puede configurar por el usuario y se guarda en localStorage
+    var storedURL = localStorage.getItem('oremrd_stream_url');
+    var radioStreamURL = storedURL || 'https://uk16freenew.listen2myradio.com/live.mp3?typeportmount=s1_12175_stream_273231163';
+    if (!storedURL) {
+        try { localStorage.setItem('oremrd_stream_url', radioStreamURL); } catch (e) { /* ignorar si storage no está disponible */ }
+    }
+    // Fallback opcional (vacío por defecto). Puedes configurar una URL secundaria en localStorage con la clave 'oremrd_stream_fallback'
+    var radioFallbackURL = localStorage.getItem('oremrd_stream_fallback') || '';
     radioAudio.volume = 0.8;
     var usingFallback = false;
 
@@ -140,12 +145,23 @@ document.addEventListener('DOMContentLoaded', function () {
             isPlaying = true;
             usingFallback = false;
 
-            // Solo Listen2MyRadio
+            // Intentar reproducir la URL configurada
             radioAudio.src = radioStreamURL;
             radioAudio.play().catch(function () {
-                if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Intenta más tarde.';
-                isPlaying = false;
-                updateRadioUI(false);
+                // Si falla la reproducción, intentar fallback si existe
+                if (radioFallbackURL && !usingFallback) {
+                    usingFallback = true;
+                    radioAudio.src = radioFallbackURL;
+                    radioAudio.play().catch(function () {
+                        if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Actualiza la URL del stream.';
+                        isPlaying = false;
+                        updateRadioUI(false);
+                    });
+                } else {
+                    if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Actualiza la URL del stream.';
+                    isPlaying = false;
+                    updateRadioUI(false);
+                }
             });
         }
         updateRadioUI(isPlaying);
@@ -167,13 +183,40 @@ document.addEventListener('DOMContentLoaded', function () {
         updateRadioUI(false);
     });
     radioAudio.addEventListener('error', function () {
-        // Si falla el stream actual, mostrar error
+        // Si falla el stream actual, intentar fallback o pedir al usuario una URL nueva
         if (isPlaying) {
+            if (radioFallbackURL && !usingFallback) {
+                usingFallback = true;
+                radioAudio.src = radioFallbackURL;
+                radioAudio.play().catch(function () {
+                    if (statusEl) statusEl.textContent = '⚠️ Error de conexión al stream';
+                    isPlaying = false;
+                    updateRadioUI(false);
+                });
+                return;
+            }
             if (statusEl) statusEl.textContent = '⚠️ Error de conexión al stream';
             isPlaying = false;
             updateRadioUI(false);
+            // Ofrecer al usuario actualizar la URL del stream con doble clic en el botón
+            // (mensaje informativo)
+            if (playBtn) {
+                playBtn.title = 'Doble clic para cambiar la URL del stream';
+            }
         }
     });
+
+    // Permitir al usuario cambiar la URL del stream con doble clic en el botón de play
+    if (playBtn) {
+        playBtn.addEventListener('dblclick', function () {
+            var newUrl = window.prompt('Ingrese la URL del stream de audio (ej. https://mi-stream.com/stream.mp3):', radioStreamURL || '');
+            if (newUrl) {
+                radioStreamURL = newUrl.trim();
+                localStorage.setItem('oremrd_stream_url', radioStreamURL);
+                alert('URL del stream actualizada. Haz clic en reproducir para conectar.');
+            }
+        });
+    }
     radioAudio.addEventListener('waiting', function () {
         if (statusEl) statusEl.textContent = '⏳ Cargando stream...';
     });
@@ -705,5 +748,45 @@ document.addEventListener('DOMContentLoaded', function () {
     if (localStorage.getItem('oremrd_dark_mode') === 'true') {
         document.body.classList.add('dark-mode');
     }
+
+    // ===== VISIT COUNTER (countapi.xyz) =====
+    (function () {
+        var COUNT_NAMESPACE = '3f3f319b5f5d4ee5938609f9fe0141b0c4c8a2065c34c499d9221165';
+
+        function showVisitCount(count) {
+            var id = 'visit-counter';
+            var el = document.getElementById(id);
+            if (!el) {
+                var footer = document.querySelector('footer');
+                if (!footer) {
+                    footer = document.createElement('footer');
+                    footer.className = 'site-footer';
+                    document.body.appendChild(footer);
+                }
+                el = document.createElement('div');
+                el.id = id;
+                el.className = 'visit-counter';
+                footer.appendChild(el);
+            }
+            el.textContent = 'Visitas: ' + (typeof count === 'number' ? count : '-');
+        }
+
+        function registerVisit() {
+            try {
+                var key = getPageId();
+                var url = 'https://api.countapi.xyz/hit/' + encodeURIComponent(COUNT_NAMESPACE) + '/' + encodeURIComponent(key);
+                fetch(url, { cache: 'no-store' })
+                    .then(function (r) { return r.json(); })
+                    .then(function (data) {
+                        if (data && typeof data.value !== 'undefined') showVisitCount(data.value);
+                    })
+                    .catch(function () { showVisitCount(null); });
+            } catch (e) {
+                console.error('Visit counter error', e);
+            }
+        }
+
+        registerVisit();
+    })();
 
 }); // fin DOMContentLoaded
