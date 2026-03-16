@@ -78,10 +78,10 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     // URL del stream: se puede configurar por el usuario y se guarda en localStorage
     var storedURL = localStorage.getItem('oremrd_stream_url');
-    var radioStreamURL = storedURL || 'https://uk16freenew.listen2myradio.com/live.mp3?typeportmount=s1_12175_stream_273231163';
-    if (!storedURL) {
-        try { localStorage.setItem('oremrd_stream_url', radioStreamURL); } catch (e) { /* ignorar si storage no está disponible */ }
-    }
+    // Forzar la URL solicitada por el usuario
+    var forcedURL = 'https://uk16freenew.listen2myradio.com/live.mp3?typeportmount=s1_12175_stream_273231163';
+    var radioStreamURL = forcedURL;
+    try { localStorage.setItem('oremrd_stream_url', radioStreamURL); } catch (e) { /* ignorar si storage no está disponible */ }
     // Fallback opcional (vacío por defecto). Puedes configurar una URL secundaria en localStorage con la clave 'oremrd_stream_fallback'
     var radioFallbackURL = localStorage.getItem('oremrd_stream_fallback') || '';
     radioAudio.volume = 0.8;
@@ -225,6 +225,12 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+    // Aplicar la URL forzada al elemento de audio si existe
+    try {
+        if (radioAudio && radioAudio.tagName && radioAudio.tagName.toLowerCase() === 'audio') {
+            radioAudio.src = radioStreamURL;
+        }
+    } catch (e) { /* noop */ }
     radioAudio.addEventListener('waiting', function () {
         if (statusEl) statusEl.textContent = '⏳ Cargando stream...';
     });
