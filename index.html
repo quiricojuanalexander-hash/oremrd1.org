@@ -296,15 +296,24 @@
 
     <!-- Footer -->
     <footer class="site-footer">
-            <!-- Barra de reproductor fija abajo -->
-            <div id="radio-bar" style="position:fixed;bottom:0;left:0;width:100%;background:#222;color:#fff;z-index:9999;box-shadow:0 -2px 16px #0008;padding:0.5em 0;display:flex;align-items:center;justify-content:center;">
-                <audio id="main-radio-audio" preload="none" style="width:220px;height:32px;outline:none;border-radius:8px;background:#111;display:inline-block;vertical-align:middle;font-size:1em;">
-                    <source src="https://uk16freenew.listen2myradio.com/live.mp3?typeportmount=s1_12175_stream_273231163" type="audio/mpeg">
-                </audio>
-                <button id="main-play-btn" style="margin-left:10px;padding:0.2em 0.7em;border:none;border-radius:8px;background:#4caf50;color:#fff;font-size:0.9em;cursor:pointer;display:inline-block;vertical-align:middle;">▶️</button>
-                <button id="main-pause-btn" style="margin-left:5px;padding:0.2em 0.7em;border:none;border-radius:8px;background:#f44336;color:#fff;font-size:0.9em;cursor:pointer;display:none;vertical-align:middle;">⏸️</button>
-                <input type="range" id="main-volume" min="0" max="1" step="0.01" value="0.8" style="width:60px;margin-left:10px;vertical-align:middle;">
-                <span style="margin-left:12px;font-size:1em;">🔊 Radio Masada en vivo</span>
+            <!-- Reproductor embebido (reemplazado por diseño simplificado) -->
+            <style>
+            /* Estilos locales del reproductor simplificado */
+            .player-simple { background:#222; color:#fff; padding:18px; border-radius:10px; display:inline-block; }
+            .player-simple button { padding:10px 18px; margin:8px; border:none; border-radius:6px; background:orange; color:#fff; cursor:pointer; }
+            </style>
+            <div style="position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:9999;">
+                <div class="player-simple" role="region" aria-label="Radio Masada">
+                    <h4 style="margin:0 0 8px 0;">📻 Radio Masada</h4>
+                    <audio id="radio" preload="none" style="width:300px;display:block;margin:0 auto 8px auto;">
+                        <source src="https://uk16freenew.listen2myradio.com/live.mp3?typeportmount=s1_12175_stream_392356682" type="audio/mpeg">
+                        Tu navegador no soporta audio HTML5.
+                    </audio>
+                    <div style="text-align:center;">
+                        <button id="play-simple">▶ Play</button>
+                        <button id="pause-simple">⏸ Pause</button>
+                    </div>
+                </div>
             </div>
         <div class="footer-inner">
             <div class="footer-columns">
@@ -334,6 +343,17 @@
             </div>
         </div>
     </footer>
+    <script>
+    // Control simple del reproductor embebido
+    document.addEventListener('DOMContentLoaded', function(){
+        var audio = document.getElementById('radio');
+        var playBtn = document.getElementById('play-simple');
+        var pauseBtn = document.getElementById('pause-simple');
+        if (!audio) return;
+        if (playBtn) playBtn.addEventListener('click', function(){ audio.play().catch(function(){}); });
+        if (pauseBtn) pauseBtn.addEventListener('click', function(){ audio.pause(); });
+    });
+    </script>
     <script src="script.js"></script>
 
 <!-- Contador DZCounter -->
