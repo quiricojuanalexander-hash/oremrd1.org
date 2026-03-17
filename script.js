@@ -86,6 +86,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var radioFallbackURL = 'https://fpsnew1.listen2myradio.com:2199/listen.php?ip=82.145.63.6&port=8959&type=s2&mount=1';
     radioAudio.volume = 0.8;
     var usingFallback = false;
+    var playWatchTimer = null;
 
     // Radio player - Barra del index
     var playBtn = document.getElementById('radioPlayBtn') || document.getElementById('main-play-btn');
@@ -168,6 +169,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Intentar reproducir la URL configurada
             radioAudio.src = radioStreamURL;
+            // limpiar timer previo
+            if (playWatchTimer) { clearTimeout(playWatchTimer); playWatchTimer = null; }
             radioAudio.play().catch(function () {
                 // Si falla la reproducción, intentar fallback si existe
                 if (radioFallbackURL && !usingFallback) {
@@ -184,6 +187,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     updateRadioUI(false);
                 }
             });
+            // si no pasa a 'playing' en 8s, intentar fallback automáticamente
+            playWatchTimer = setTimeout(function () {
+                if (!radioAudio || !isPlaying) return;
+                if (!radioAudio.paused && !radioAudio.ended) return; // ya está sonando
+                if (radioFallbackURL && !usingFallback) {
+                    usingFallback = true;
+                    try { radioAudio.src = radioFallbackURL; radioAudio.play().catch(function(){ if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar al fallback.'; }); }
+                    catch (e) { if (statusEl) statusEl.textContent = '⚠️ Error al cambiar a fallback.'; }
+                } else {
+                    if (statusEl) statusEl.textContent = '⚠️ No se pudo conectar. Actualiza la URL del stream.';
+                    isPlaying = false;
+                    updateRadioUI(false);
+                }
+            }, 8000);
         }
         updateRadioUI(isPlaying);
     }
@@ -201,10 +218,12 @@ document.addEventListener('DOMContentLoaded', function () {
         if (usingFallback) {
             if (statusEl) statusEl.textContent = '🔴 Reproduciendo radio cristiana en vivo';
         }
+        if (playWatchTimer) { clearTimeout(playWatchTimer); playWatchTimer = null; }
     });
     radioAudio.addEventListener('pause', function () {
         isPlaying = false;
         updateRadioUI(false);
+        if (playWatchTimer) { clearTimeout(playWatchTimer); playWatchTimer = null; }
     });
     radioAudio.addEventListener('error', function () {
         // Si falla el stream actual, intentar fallback o pedir al usuario una URL nueva
