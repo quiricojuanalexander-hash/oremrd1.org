@@ -84,6 +84,9 @@ document.addEventListener('DOMContentLoaded', function () {
     try { localStorage.setItem('oremrd_stream_url', radioStreamURL); } catch (e) { /* ignorar si storage no está disponible */ }
     // Fallback conocido que devuelve audio/mpeg (usado cuando la URL primaria no sirve)
     var radioFallbackURL = 'https://fpsnew1.listen2myradio.com:2199/listen.php?ip=82.145.63.6&port=8959&type=s2&mount=1';
+    // La siguiente línea ha sido deshabilitada para usar la URL principal solicitada.
+    // radioStreamURL = radioFallbackURL;
+    // try { localStorage.setItem('oremrd_stream_url', radioStreamURL); } catch (e) { /* ignorar si storage no está disponible */ }
     radioAudio.volume = 0.8;
     var usingFallback = false;
     var playWatchTimer = null;
