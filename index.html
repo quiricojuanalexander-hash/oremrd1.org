@@ -305,10 +305,11 @@
             <div style="position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:9999;">
                 <div class="player-simple" role="region" aria-label="Radio Masada">
                     <h4 style="margin:0 0 8px 0;">📻 Radio Masada</h4>
-                    <audio id="radio" preload="none" style="width:300px;display:block;margin:0 auto 8px auto;">
+                    <audio id="radio" preload="none" crossorigin="anonymous" style="width:300px;display:block;margin:0 auto 8px auto;">
                         <source src="https://uk16freenew.listen2myradio.com/live.mp3?typeportmount=s1_12175_stream_392356682" type="audio/mpeg">
                         Tu navegador no soporta audio HTML5.
                     </audio>
+                    <div id="radio-status" style="color:#ffc107;margin-top:6px;font-size:0.95em;">Estado: esperando interacción</div>
                     <div style="text-align:center;">
                         <button id="play-simple">▶ Play</button>
                         <button id="pause-simple">⏸ Pause</button>
@@ -349,9 +350,29 @@
         var audio = document.getElementById('radio');
         var playBtn = document.getElementById('play-simple');
         var pauseBtn = document.getElementById('pause-simple');
+        var status = document.getElementById('radio-status');
         if (!audio) return;
-        if (playBtn) playBtn.addEventListener('click', function(){ audio.play().catch(function(){}); });
-        if (pauseBtn) pauseBtn.addEventListener('click', function(){ audio.pause(); });
+        function setStatus(msg, color){ if(status){ status.textContent = 'Estado: ' + msg; if(color) status.style.color = color; } }
+
+        if (playBtn) playBtn.addEventListener('click', function(){
+            setStatus('conectando...', '#ffc107');
+            audio.play().then(function(){ setStatus('reproduciendo', '#4caf50'); }).catch(function(err){
+                console.error('Audio play error:', err);
+                setStatus('no se pudo reproducir — revisa la consola (CORS/u otra razón)', '#f44336');
+            });
+        });
+        if (pauseBtn) pauseBtn.addEventListener('click', function(){ audio.pause(); setStatus('pausado', '#bbb'); });
+
+        // Eventos para diagnosticar problemas
+        audio.addEventListener('error', function(e){
+            console.error('Audio element error event:', e);
+            setStatus('error al cargar el stream (ver consola)', '#f44336');
+        });
+        audio.addEventListener('stalled', function(){ setStatus('stalled — problema de red', '#f44336'); });
+        audio.addEventListener('waiting', function(){ setStatus('esperando datos...', '#ffc107'); });
+        audio.addEventListener('canplay', function(){ setStatus('listo para reproducir', '#4caf50'); });
+        audio.addEventListener('playing', function(){ setStatus('reproduciendo', '#4caf50'); });
+        audio.addEventListener('suspend', function(){ setStatus('suspendido', '#f44336'); });
     });
     </script>
     <script src="script.js"></script>
